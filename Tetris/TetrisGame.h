@@ -2,6 +2,8 @@
 #define TETRISGAME_H
 
 #include <vector>
+#include <iostream>
+
 
 class block
 {
@@ -25,12 +27,12 @@ public:
 	TetrisGame();
 	~TetrisGame();
 	void displayGameArray();
-	void addblock( int type)
+	void addblock(int type);
+	char gamearr[25][10];
 	//some function to generate random string of new blocks
 	//
 
 private:
-	char gamearr[25][10];
 	std::vector<block> blockvec;
 };
 
