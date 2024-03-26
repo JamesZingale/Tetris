@@ -2,7 +2,13 @@
 
 TetrisGame::TetrisGame()
 {
-
+	for (int i = 0; i < 25; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			gamearr[i][j] = ' ';
+		}
+	}
 
 }
 

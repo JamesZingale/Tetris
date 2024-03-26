@@ -25,13 +25,13 @@ public:
 	TetrisGame();
 	~TetrisGame();
 	void displayGameArray();
-	void addblock( int type)
+	void addblock(int type);
 	//some function to generate random string of new blocks
 	//
 
 private:
 	char gamearr[25][10];
-	std::vector<block> blockvec;
+	std::vector<block> blockvec[100];
 };
 
 
