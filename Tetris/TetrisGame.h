@@ -29,6 +29,7 @@ public:
 	void displayGameArray();
 	void addblock(int type);
 	char gamearr[25][10];
+
 	//some function to generate random string of new blocks
 	//
 
