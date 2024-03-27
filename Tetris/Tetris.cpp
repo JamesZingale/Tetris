@@ -23,6 +23,58 @@ int main()
             }
         }
     }
+    //test rotate CW/CCW
+    std::cout << '\n';
+    block test2(0);
+    for (int i = 0; i < 4; i++)
+    {
+        std::cout << '\n';
+        for (int j = 0; j < 4; j++)
+        {
+            std::cout << test2.blockarr[i][j];
+        }
+    }
+    std::cout << '\n';
+    test2.rotateCounterCW();
+    for (int i = 0; i < 4; i++)
+    {
+        std::cout << '\n';
+        for (int j = 0; j < 4; j++)
+        {
+            std::cout << test2.blockarr[i][j];
+        }
+    }
+    std::cout << '\n';
+    test2.rotateCounterCW();
+    for (int i = 0; i < 4; i++)
+    {
+        std::cout << '\n';
+        for (int j = 0; j < 4; j++)
+        {
+            std::cout << test2.blockarr[i][j];
+        }
+    }
+    std::cout << '\n';
+    test2.rotateCounterCW();
+    for (int i = 0; i < 4; i++)
+    {
+        std::cout << '\n';
+        for (int j = 0; j < 4; j++)
+        {
+            std::cout << test2.blockarr[i][j];
+        }
+    }
+    std::cout << '\n';
+    test2.rotateCounterCW();
+    for (int i = 0; i < 4; i++)
+    {
+        std::cout << '\n';
+        for (int j = 0; j < 4; j++)
+        {
+            std::cout << test2.blockarr[i][j];
+        }
+    }
+
   }
 
 

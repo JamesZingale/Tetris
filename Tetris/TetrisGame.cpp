@@ -2,8 +2,8 @@
 
 block::block(int type)
 {
-	topleft_X = -1;
-	topleft_Y = -1;
+	topleft_X = 3;
+	topleft_Y = 0;
 	blocktype = type;
 	active = 1;
 
@@ -62,6 +62,36 @@ block::block(int type)
 		break;
 	}
 }
+void block::transpose()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = i + 1; j < 4; j++)
+		{
+			std::swap(blockarr[i][j], blockarr[j][i]);
+		}
+	}
+}
+void block::reverseRows()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			std::swap(blockarr[i][j], blockarr[i][3-j]);
+		}
+	}
+}
+void block::rotateCounterCW()
+{
+	reverseRows();
+	transpose();
+}
+void block::rotateCW()
+{
+	transpose();
+	reverseRows();
+}
 
 TetrisGame::TetrisGame()
 {
@@ -76,12 +106,14 @@ TetrisGame::TetrisGame()
 
 void TetrisGame::addBlock(int type)
 {
-
+	blockvec.push_back(block(type));
 }
-void TetrisGame::moveBlockDown(block curBlock)
+
+void TetrisGame::updateBlockPos(std::vector<block>::iterator, int rot, int dir) 
 {
 
 }
+
 
 void TetrisGame::displayGameArray()
 {
