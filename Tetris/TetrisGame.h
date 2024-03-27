@@ -13,11 +13,10 @@ public:
 	//clear row (have it call on all blocks but only do it based on top left y)
 
 	int topleft_Y, topleft_X;
-	bool active;
+	bool inplay, active;
 	int blocktype;
 	block();
-	~block();
-	char blockarr[5][5];
+	char blockarr[4][4];
 };
 
 
@@ -25,16 +24,15 @@ class TetrisGame
 {
 public:
 	TetrisGame();
-	~TetrisGame();
 	void displayGameArray();
 	void addblock(int type);
-	char gamearr[25][10];
 
 	//some function to generate random string of new blocks
 	//
 
 private:
-	std::vector<block> blockvec;
+	char gamearr[25][10];
+	std::vector<block> blockvec{ 50 };
 };
 
 
