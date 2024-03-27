@@ -5,36 +5,31 @@
 #include <iostream>
 
 
-class block
-{
+class block{
 public:
 	//functions for transpose, reverse row, -> rotate counter-clw/clw
 	// 
 	//clear row (have it call on all blocks but only do it based on top left y)
 
 	int topleft_Y, topleft_X;
-	bool inplay, active;
+	bool active;
 	int blocktype;
-	block();
+	block(int type);
 	char blockarr[4][4];
 };
 
-
-class TetrisGame
-{
+class TetrisGame{
 public:
 	TetrisGame();
 	void displayGameArray();
-	void addblock(int type);
-
+	void addBlock(int type);
+	void moveBlockDown(block curBlock);
 	//some function to generate random string of new blocks
 	//
-
 private:
 	char gamearr[25][10];
-	std::vector<block> blockvec{ 50 };
+	std::vector<block> blockvec;
 };
-
 
 #endif // !TETRISGAME_H
 
