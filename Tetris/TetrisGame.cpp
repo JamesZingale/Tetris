@@ -95,34 +95,237 @@ void block::rotateCW()
 
 TetrisGame::TetrisGame()
 {
-	for (int i = 5; i < 25; i++)
+	activeblock = 0;
+	for (int i = 0; i < 25; i++)
 	{
 		for (int j = 0; j < 10; j++)
 		{
-			gamearr[i][j] = ' ';
+			gamearr[i][j] = 'O';
+		}
+	}
+}
+bool TetrisGame::rotBlock(std::vector<block>::iterator it, int rot)
+{
+	clearBlock(it);
+	if (validRot(it, rot))
+	{
+		if (rot == -1)
+		{
+			it->rotateCounterCW();
+		}
+		if (rot == 1)
+		{
+			it->rotateCW();
+		}
+		return 1;
+	}
+	return 0;
+
+}
+
+void TetrisGame::doImput(std::vector<block>::iterator iter)
+{
+	if (_kbhit())
+	{
+		char key = _getch();
+		switch (key)
+		{
+		case 'a': //left
+			moveBlock(iter, 3);
+			break;
+		case 's': // down
+			moveBlock(iter, 2);
+			break;
+		case 'd':
+			moveBlock(iter, 1);
+			break;
+		case 'j': // CCW
+			rotBlock(iter, -1);
+			break;
+		case 'k':
+			rotBlock(iter, 1);
+			break;
+		default:
+			break;
+
 		}
 	}
 }
 
+
+bool TetrisGame::moveBlock(std::vector<block>::iterator it, int dir)
+{
+	clearBlock(it);
+	int newY, newX;
+	switch (dir)
+	{
+	case 0: // up
+		newY = it->topleft_Y - 1;
+		newX = it->topleft_X;
+		break;
+	case 1: // right
+		newY = it->topleft_Y;
+		newX = it->topleft_X + 1;
+		break;
+	case 2: // down
+		newY = it->topleft_Y + 1;
+		newX = it->topleft_X;
+		break;
+	case 3: // left
+		newY = it->topleft_Y;
+		newX = it->topleft_X - 1;
+		break;
+	default:
+		newY = it->topleft_Y;
+		newX = it->topleft_X;
+		break;
+	}
+	if (validMove(it, dir))
+	{
+		it->topleft_X = newX;
+		it->topleft_Y = newY;
+		addBlocktoarr(it);
+		return 1;
+	}else{
+		addBlocktoarr(it);
+		return 0;
+	}
+	
+}
+bool TetrisGame::validRot(std::vector<block>::iterator it, int rot)
+{
+	block temp = block(*it);
+	switch (rot)
+	{
+	case -1: // CCW
+		temp.rotateCounterCW();
+		break;
+	case 1: // CW
+		temp.rotateCW();
+		break;
+	case 0:
+		break;
+	default:
+		break;
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (it->blockarr[i][j] == '#')
+			{
+				if (gamearr[it->topleft_Y + i][it->topleft_X + j] == '#')
+				{
+					return 0;
+				}
+			}
+		}
+	}
+	return 1;
+}
+bool TetrisGame::validMove(std::vector<block>::iterator it, int dir)
+{
+	block temp = block(*it);
+	int newY, newX;
+	switch (dir)
+	{
+	case 0: // up
+		newY = temp.topleft_Y - 1;
+		newX = temp.topleft_X;
+		break;
+	case 1: // right
+		newY = temp.topleft_Y;
+		newX = temp.topleft_X + 1;
+		break;
+	case 2: // down
+		newY = temp.topleft_Y + 1;
+		newX = temp.topleft_X;
+		break;
+	case 3: // left
+		newY = temp.topleft_Y;
+		newX = temp.topleft_X - 1;
+		break;
+	default:
+		newY = it->topleft_Y;
+		newX = it->topleft_X;
+		break;
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (it->blockarr[i][j] == '#')
+			{
+				if (gamearr[newY + i][newX + j] == '#' || newY + i > 24 || newY + i < 0 || newX + j > 9 || newX + j < 0)
+				{
+					return 0;
+				}
+			}
+		}
+	}
+	return 1;
+}
+void TetrisGame::clearBlock(std::vector<block>::iterator it)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (it->blockarr[i][j] == '#')
+			{
+				gamearr[it->topleft_Y + i][it->topleft_X + j] = 'O';
+			}
+		}
+	}
+}
+void TetrisGame::addBlocktoarr(std::vector<block>::iterator it)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (it->blockarr[i][j] == '#')
+			{
+				gamearr[it->topleft_Y + i][it->topleft_X + j] = '#';
+			}
+		}
+	}
+}
 void TetrisGame::addBlock(int type)
 {
-	blockvec.push_back(block(type));
+	bool canadd = 1;
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (gamearr[0 + i][3 + j] == '#')
+			{
+				canadd = 0;
+			}
+		}
+	}
+	if (canadd)
+	{
+		blockvec.push_back(block(type));
+		activeblock = 1;
+		addBlocktoarr(blockvec.end() - 1);
+	}
+	else {
+		gameover = 1;
+	}
 }
-
-void TetrisGame::updateBlockPos(std::vector<block>::iterator, int rot, int dir) 
-{
-
-}
-
-
 void TetrisGame::displayGameArray()
 {
+	std::cout << '\n';
+	std::cout << "|----------|\n";
 	for (int i = 0; i < 25; i++) 
 	{
+		std::cout << '|';
 		for (int j = 0; j < 10; j++) 
 		{
 			std::cout << gamearr[i][j];
 		}
-		std::cout << "\n";
+		std::cout << "| \n";
 	}
+	std::cout << "|----------|";
 }

@@ -3,21 +3,18 @@
 
 #include <vector>
 #include <iostream>
+#include <windows.h>
+#include <conio.h>
 
 
 class block{
 public:
-	//function for clear row (have it call on all blocks but only do it based on top left y)
 	void transpose();
 	void reverseRows();
 	void rotateCounterCW();
 	void rotateCW();
-	//int leftmostCol();      // returns leftmost col of block on main arr using topleft y/x
-	//int rightmostCol();     // returns leftmost col of block on main arr using topleft y/x
-	//int bottommostRow();    // returns leftmost col of block on main arr using topleft y/x
-
-	int topleft_Y, topleft_X;
 	bool active;
+	int topleft_Y, topleft_X;
 	int blocktype;
 	block(int type);
 	char blockarr[4][4];
@@ -25,16 +22,20 @@ public:
 
 class TetrisGame{
 public:
+	bool activeblock, gameover = 0;
+	std::vector<block> blockvec;
 	TetrisGame();
-	void addBlockstoGameArr();
+	void doImput(std::vector<block>::iterator iter);
 	void displayGameArray();
-	void addBlock(int);
-	void updateBlockPos(std::vector<block>::iterator, int rot, int dir);
-
-	//some function to generate random string of new blocks
+	bool moveBlock(std::vector<block>::iterator it, int dir);
+	bool rotBlock(std::vector<block>::iterator it, int rot);
+	void clearBlock(std::vector<block>::iterator it);
+	void addBlocktoarr(std::vector<block>::iterator it);
+	void addBlock(int type);
+	bool validRot(std::vector<block>::iterator it, int rot);
+	bool validMove(std::vector<block>::iterator it, int dir);
 private:
 	char gamearr[25][10];
-	std::vector<block> blockvec;
 };
 
 #endif // !TETRISGAME_H

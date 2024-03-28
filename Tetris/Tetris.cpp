@@ -7,74 +7,27 @@
 int main()
 {
     TetrisGame chosen;
+    chosen.addBlock(0);
     chosen.displayGameArray();
-
-    for (int typee = 0; typee < 7; typee++)
+    while (!chosen.gameover) 
     {
-        std::cout << '\n';
-        std::cout << '\n';
-        block test(typee);
-        for (int i = 0; i < 4; i++)
+        for (auto iter = chosen.blockvec.begin(); iter != chosen.blockvec.end(); iter++)
         {
-            std::cout << '\n';
-            for (int j = 0; j < 4; j++)
+            if (iter->active)
             {
-                std::cout << test.blockarr[i][j];
+                while (chosen.moveBlock(iter, 2))
+                {
+                chosen.doImput(iter);
+                chosen.doImput(iter);
+                chosen.doImput(iter);
+                chosen.displayGameArray();
+                Sleep(250);
+                }
             }
         }
+        chosen.addBlock(1);
+        std::cout << chosen.gameover << '\n';
     }
-    //test rotate CW/CCW
-    std::cout << '\n';
-    block test2(0);
-    for (int i = 0; i < 4; i++)
-    {
-        std::cout << '\n';
-        for (int j = 0; j < 4; j++)
-        {
-            std::cout << test2.blockarr[i][j];
-        }
-    }
-    std::cout << '\n';
-    test2.rotateCounterCW();
-    for (int i = 0; i < 4; i++)
-    {
-        std::cout << '\n';
-        for (int j = 0; j < 4; j++)
-        {
-            std::cout << test2.blockarr[i][j];
-        }
-    }
-    std::cout << '\n';
-    test2.rotateCounterCW();
-    for (int i = 0; i < 4; i++)
-    {
-        std::cout << '\n';
-        for (int j = 0; j < 4; j++)
-        {
-            std::cout << test2.blockarr[i][j];
-        }
-    }
-    std::cout << '\n';
-    test2.rotateCounterCW();
-    for (int i = 0; i < 4; i++)
-    {
-        std::cout << '\n';
-        for (int j = 0; j < 4; j++)
-        {
-            std::cout << test2.blockarr[i][j];
-        }
-    }
-    std::cout << '\n';
-    test2.rotateCounterCW();
-    for (int i = 0; i < 4; i++)
-    {
-        std::cout << '\n';
-        for (int j = 0; j < 4; j++)
-        {
-            std::cout << test2.blockarr[i][j];
-        }
-    }
-
-  }
+ }
 
 
