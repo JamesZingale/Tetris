@@ -95,7 +95,6 @@ void block::rotateCW()
 
 TetrisGame::TetrisGame()
 {
-	activeblock = 0;
 	for (int i = 0; i < 25; i++)
 	{
 		for (int j = 0; j < 10; j++)
@@ -151,8 +150,6 @@ void TetrisGame::doImput(std::vector<block>::iterator iter)
 		}
 	}
 }
-
-
 bool TetrisGame::moveBlock(std::vector<block>::iterator it, int dir)
 {
 	clearBlock(it);
@@ -187,11 +184,14 @@ bool TetrisGame::moveBlock(std::vector<block>::iterator it, int dir)
 		addBlocktoarr(it);
 		return 1;
 	}else{
+		it->active = 0;
 		addBlocktoarr(it);
 		return 0;
 	}
 	
 }
+
+// Valid rot need to check bounds
 bool TetrisGame::validRot(std::vector<block>::iterator it, int rot)
 {
 	block temp = block(*it);
@@ -307,7 +307,6 @@ void TetrisGame::addBlock(int type)
 	if (canadd)
 	{
 		blockvec.push_back(block(type));
-		activeblock = 1;
 		addBlocktoarr(blockvec.end() - 1);
 	}
 	else {
@@ -327,5 +326,90 @@ void TetrisGame::displayGameArray()
 		}
 		std::cout << "| \n";
 	}
-	std::cout << "|----------|";
+	std::cout << "|----------|\n";
+	std::cout << "| Score: " << score << "\n";
+	std::cout << "| Next Blocks: " << "\n";
+	std::cout << "|__________|\n";
+
+}
+int TetrisGame::clearRows() 
+{
+	std::cout << "\n clear rows called \n";
+	int clearedcount = 0;
+	for (int i = 0; i < 25; i++) {
+		bool rowfull = true;
+		for (int j = 0; j < 10; j++) {
+			if (gamearr[i][j] == 'O') {
+				rowfull = false;
+				break; // No need to check further if any cell in the row is empty
+			}
+		}
+		if (rowfull) {
+			clearedcount++;
+			// Clear the row in gamearr
+			for (int j = 0; j < 10; j++) {
+				gamearr[i][j] = 'O';
+			}
+			// Clear blockarr of blocks overlapping with this row
+			for (auto it = blockvec.begin(); it != blockvec.end(); it++) { //for every block
+				if (it->topleft_Y <= i && it->topleft_Y + 3 >= i) {     // if i could be in range of block area
+					for (int k = 0; k < 4; k++) {           // then check every block
+						for (int l = 0; l < 4; l++) {
+							if (it->blockarr[i - it->topleft_Y][l] == '#') {
+								it->blockarr[i - it->topleft_Y][l] = '-';
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return clearedcount;
+}
+void TetrisGame::moveAllDown()
+{
+
+	for (auto iter = blockvec.begin(); iter != blockvec.end(); iter++)
+	{
+		moveBlock(iter, 2);
+
+	}
+}
+void TetrisGame::updatescoreYtotalrowcleared(int rowscleared)
+{
+	int add = 0;
+	switch (rowscleared)
+	{
+	case 0:
+		add = 0;
+		break;
+	case 1:
+		add = 250;
+		break;
+	case 2:
+		add = 500;
+		break;
+	case 3:
+		add = 900;
+		break;
+	case 4:
+		add = 1500;
+	}
+	if (rowscleared > 4)
+	{
+		add = 2500;
+	}
+	score += add;
+	totalrowscleared += rowscleared;
+}
+int TetrisGame::waitTime()
+{
+	int temp = 275 - totalrowscleared;
+	if (temp > 100)
+	{
+		return temp;
+	}
+	else {
+		return 100;
+	}
 }

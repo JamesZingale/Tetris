@@ -22,10 +22,14 @@ public:
 
 class TetrisGame{
 public:
-	bool activeblock, gameover = 0;
+	bool  gameover = 0;
 	std::vector<block> blockvec;
 	TetrisGame();
+	int waitTime();
+	void updatescoreYtotalrowcleared( int rowscleared);
 	void doImput(std::vector<block>::iterator iter);
+	int clearRows();
+	void moveAllDown();
 	void displayGameArray();
 	bool moveBlock(std::vector<block>::iterator it, int dir);
 	bool rotBlock(std::vector<block>::iterator it, int rot);
@@ -36,6 +40,8 @@ public:
 	bool validMove(std::vector<block>::iterator it, int dir);
 private:
 	char gamearr[25][10];
+	int score;
+	int totalrowscleared;
 };
 
 #endif // !TETRISGAME_H
