@@ -14,6 +14,7 @@ const char BACKCHAR = ' ';
 
 class block{
 public:
+	block(int type);
 	void transpose();
 	void reverseRows();
 	void rotateCounterCW();
@@ -21,14 +22,11 @@ public:
 	bool active;
 	int topleft_Y, topleft_X;
 	int blocktype;
-	block(int type);
 	char blockarr[4][4];
 };
 
 class TetrisGame{
 public:
-	bool  gameover = 0;
-	std::vector<block> blockvec;
 	TetrisGame();
 	int waitTime();
 	int clearRows();
@@ -49,6 +47,8 @@ public:
 	int getnextBlockType();
 	void setnextBlockType( int num);
 	void outputblock(int type);
+	bool  gameover = 0;
+	std::vector<block> blockvec;
 
 private:
 	char nextBlockType;

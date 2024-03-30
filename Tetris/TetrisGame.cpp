@@ -443,7 +443,7 @@ std::cout <<    "|--------------------------------------------------------------
 }
 void TetrisGame::gameoverscreen()
 {
-std::cout <<"|----------------------------------------------------------------------------------|\n"
+std::cout <<"\n|----------------------------------------------------------------------------------|\n"
 			"|  GGGGGG       A       M     M   EEEEEE       OOOOO   V       V  EEEEEE   RRRRRR  |\n"
 			"| G            A A      MM   MM   E           O     O   V     V   E        R     R |\n"
 			"| G   GGG     AAAAA     M M M M   EEEEE       O     O    V   V    EEEEE    RRRRRR  |\n"
@@ -453,11 +453,48 @@ std::cout <<"|------------------------------------------------------------------
 			"| final score:                                                                     |\n"
 			"|----------------------------------------------------------------------------------|\n"
 			"| Score:" << score << "\n"
+	        "| Rows Cleared:" << totalrowscleared << "\n"
 			"|----------------------------------------------------------------------------------|\n";
 }
 int TetrisGame::randomnum()
 {
-	return rand() % 7;
+	bool notLTmax = true;
+	while (notLTmax)
+	{
+		static int zerocount = 0, onecount = 0, twocount = 0, threecount = 0, fourcount = 0, fivecount = 0, sixcount = 0, numcount = 0;
+
+		int num = rand() % 7;
+		std::vector<int> vals = { zerocount, onecount, twocount, threecount, fourcount, fivecount, sixcount };
+		auto iter = std::max_element(vals.begin(), vals.end());
+
+		switch (num)
+		{
+		case 0: numcount = ++zerocount; break;
+		case 1: numcount = ++onecount; break;
+		case 2: numcount = ++twocount; break;
+		case 3: numcount = ++threecount; break;
+		case 4: numcount = ++fourcount; break;
+		case 5: numcount = ++fivecount; break;
+		case 6: numcount = ++sixcount; break;
+		}
+		if (*iter == 0 || std::count(vals.begin(), vals.end(), *iter) == vals.size() || numcount <= *iter)
+		{
+			notLTmax = false;
+			return num;
+		}
+		else {
+			switch (num)
+			{
+			case 0: --zerocount; break;
+			case 1: --onecount; break;
+			case 2: --twocount; break;
+			case 3: --threecount; break;
+			case 4: --fourcount; break;
+			case 5: --fivecount; break;
+			case 6: --sixcount; break;
+			}
+		}
+	}
 }
 int TetrisGame::getnextBlockType()
 {
