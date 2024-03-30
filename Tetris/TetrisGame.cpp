@@ -11,52 +11,52 @@ block::block(int type)
 	{
 		 for (int j = 0; j < 4; j++)
 		 {
-			 blockarr[i][j] = '-';
+			 blockarr[i][j] = BACKCHAR;
 		 }
 	}
 
 	switch (type){
 	case 0: // line block (|)
-		blockarr[1][0] = '#';
-		blockarr[1][1] = '#';
-		blockarr[1][2] = '#';
-		blockarr[1][3] = '#';
+		blockarr[1][0] = BLOCKCHAR;
+		blockarr[1][1] = BLOCKCHAR;
+		blockarr[1][2] = BLOCKCHAR;
+		blockarr[1][3] = BLOCKCHAR;
 		break;
 	case 1: // Backwards L block
-		blockarr[1][1] = '#';
-		blockarr[2][1] = '#';
-		blockarr[2][2] = '#';
-		blockarr[2][3] = '#';
+		blockarr[1][1] = BLOCKCHAR;
+		blockarr[2][1] = BLOCKCHAR;
+		blockarr[2][2] = BLOCKCHAR;
+		blockarr[2][3] = BLOCKCHAR;
 		break;
 	case 2: // L block
-		blockarr[1][2] = '#';
-		blockarr[2][0] = '#';
-		blockarr[2][1] = '#';
-		blockarr[2][2] = '#';
+		blockarr[1][2] = BLOCKCHAR;
+		blockarr[2][0] = BLOCKCHAR;
+		blockarr[2][1] = BLOCKCHAR;
+		blockarr[2][2] = BLOCKCHAR;
 		break;
 	case 3: // Square block
-		blockarr[1][1] = '#';
-		blockarr[1][2] = '#';
-		blockarr[2][1] = '#';
-		blockarr[2][2] = '#';
+		blockarr[1][1] = BLOCKCHAR;
+		blockarr[1][2] = BLOCKCHAR;
+		blockarr[2][1] = BLOCKCHAR;
+		blockarr[2][2] = BLOCKCHAR;
 		break;
 	case 4: //  S block
-		blockarr[1][1] = '#';
-		blockarr[1][2] = '#';
-		blockarr[2][0] = '#';
-		blockarr[2][1] = '#';
+		blockarr[1][1] = BLOCKCHAR;
+		blockarr[1][2] = BLOCKCHAR;
+		blockarr[2][0] = BLOCKCHAR;
+		blockarr[2][1] = BLOCKCHAR;
 		break;
 	case 5: // Z block
-		blockarr[1][1] = '#';
-		blockarr[1][2] = '#';
-		blockarr[2][2] = '#';
-		blockarr[2][3] = '#';
+		blockarr[1][1] = BLOCKCHAR;
+		blockarr[1][2] = BLOCKCHAR;
+		blockarr[2][2] = BLOCKCHAR;
+		blockarr[2][3] = BLOCKCHAR;
 		break;
 	case 6: // T block
-		blockarr[1][1] = '#';
-		blockarr[2][0] = '#';
-		blockarr[2][1] = '#';
-		blockarr[2][2] = '#';
+		blockarr[1][1] = BLOCKCHAR;
+		blockarr[2][0] = BLOCKCHAR;
+		blockarr[2][1] = BLOCKCHAR;
+		blockarr[2][2] = BLOCKCHAR;
 		break;
 	default:
 		break;
@@ -95,11 +95,14 @@ void block::rotateCW()
 
 TetrisGame::TetrisGame()
 {
+	nextBlockType = -1;
+	score = 0;
+	totalrowscleared = 0;
 	for (int i = 0; i < 25; i++)
 	{
 		for (int j = 0; j < 10; j++)
 		{
-			gamearr[i][j] = 'O';
+			gamearr[i][j] = BACKCHAR;
 		}
 	}
 }
@@ -118,6 +121,7 @@ bool TetrisGame::rotBlock(std::vector<block>::iterator it, int rot)
 		}
 		return 1;
 	}
+	addBlocktoarr(it);
 	return 0;
 
 }
@@ -130,13 +134,13 @@ void TetrisGame::doImput(std::vector<block>::iterator iter)
 		switch (key)
 		{
 		case 'a': //left
-			moveBlock(iter, 3);
+			moveBlock(iter, 3, 0);
 			break;
 		case 's': // down
-			moveBlock(iter, 2);
+			moveBlock(iter, 2, 0);
 			break;
 		case 'd':
-			moveBlock(iter, 1);
+			moveBlock(iter, 1, 0);
 			break;
 		case 'j': // CCW
 			rotBlock(iter, -1);
@@ -150,7 +154,7 @@ void TetrisGame::doImput(std::vector<block>::iterator iter)
 		}
 	}
 }
-bool TetrisGame::moveBlock(std::vector<block>::iterator it, int dir)
+bool TetrisGame::moveBlock(std::vector<block>::iterator it, int dir, bool mainMove)
 {
 	clearBlock(it);
 	int newY, newX;
@@ -184,14 +188,15 @@ bool TetrisGame::moveBlock(std::vector<block>::iterator it, int dir)
 		addBlocktoarr(it);
 		return 1;
 	}else{
+		if (mainMove)
+		{
 		it->active = 0;
+		}
 		addBlocktoarr(it);
 		return 0;
 	}
 	
 }
-
-// Valid rot need to check bounds
 bool TetrisGame::validRot(std::vector<block>::iterator it, int rot)
 {
 	block temp = block(*it);
@@ -212,9 +217,10 @@ bool TetrisGame::validRot(std::vector<block>::iterator it, int rot)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			if (it->blockarr[i][j] == '#')
+			if (temp.blockarr[i][j] == BLOCKCHAR)
 			{
-				if (gamearr[it->topleft_Y + i][it->topleft_X + j] == '#')
+				
+				if(gamearr[temp.topleft_Y + i][temp.topleft_X + j] == BLOCKCHAR || temp.topleft_Y + i < 0 || temp.topleft_Y + i > 24 || temp.topleft_X + j > 9|| temp.topleft_X + j < 0)
 				{
 					return 0;
 				}
@@ -254,9 +260,9 @@ bool TetrisGame::validMove(std::vector<block>::iterator it, int dir)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			if (it->blockarr[i][j] == '#')
+			if (it->blockarr[i][j] == BLOCKCHAR)
 			{
-				if (gamearr[newY + i][newX + j] == '#' || newY + i > 24 || newY + i < 0 || newX + j > 9 || newX + j < 0)
+				if (gamearr[newY + i][newX + j] == BLOCKCHAR || newY + i > 24 || newY + i < 0 || newX + j > 9 || newX + j < 0)
 				{
 					return 0;
 				}
@@ -271,9 +277,9 @@ void TetrisGame::clearBlock(std::vector<block>::iterator it)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			if (it->blockarr[i][j] == '#')
+			if (it->blockarr[i][j] == BLOCKCHAR)
 			{
-				gamearr[it->topleft_Y + i][it->topleft_X + j] = 'O';
+				gamearr[it->topleft_Y + i][it->topleft_X + j] = BACKCHAR;
 			}
 		}
 	}
@@ -284,9 +290,9 @@ void TetrisGame::addBlocktoarr(std::vector<block>::iterator it)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			if (it->blockarr[i][j] == '#')
+			if (it->blockarr[i][j] == BLOCKCHAR)
 			{
-				gamearr[it->topleft_Y + i][it->topleft_X + j] = '#';
+				gamearr[it->topleft_Y + i][it->topleft_X + j] = BLOCKCHAR;
 			}
 		}
 	}
@@ -298,7 +304,7 @@ void TetrisGame::addBlock(int type)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			if (gamearr[0 + i][3 + j] == '#')
+			if (gamearr[0 + i][3 + j] == BLOCKCHAR)
 			{
 				canadd = 0;
 			}
@@ -315,9 +321,12 @@ void TetrisGame::addBlock(int type)
 }
 void TetrisGame::displayGameArray()
 {
+	
 	std::cout << '\n';
 	std::cout << "|----------|\n";
-	for (int i = 0; i < 25; i++) 
+	std::cout << "|  TETRIS  |\n";
+	std::cout << "|----------|\n";
+	for (int i = 4; i < 25; i++) 
 	{
 		std::cout << '|';
 		for (int j = 0; j < 10; j++) 
@@ -327,19 +336,18 @@ void TetrisGame::displayGameArray()
 		std::cout << "| \n";
 	}
 	std::cout << "|----------|\n";
-	std::cout << "| Score: " << score << "\n";
-	std::cout << "| Next Blocks: " << "\n";
-	std::cout << "|__________|\n";
+	std::cout << "Score: " << score << "\n";
+	std::cout << "Next Block: \n";
+	outputblock(nextBlockType);
 
 }
-int TetrisGame::clearRows() 
+int TetrisGame::clearRows()
 {
-	std::cout << "\n clear rows called \n";
 	int clearedcount = 0;
 	for (int i = 0; i < 25; i++) {
 		bool rowfull = true;
 		for (int j = 0; j < 10; j++) {
-			if (gamearr[i][j] == 'O') {
+			if (gamearr[i][j] == BACKCHAR) {
 				rowfull = false;
 				break; // No need to check further if any cell in the row is empty
 			}
@@ -348,15 +356,16 @@ int TetrisGame::clearRows()
 			clearedcount++;
 			// Clear the row in gamearr
 			for (int j = 0; j < 10; j++) {
-				gamearr[i][j] = 'O';
+				gamearr[i][j] = BACKCHAR;
 			}
 			// Clear blockarr of blocks overlapping with this row
-			for (auto it = blockvec.begin(); it != blockvec.end(); it++) { //for every block
-				if (it->topleft_Y <= i && it->topleft_Y + 3 >= i) {     // if i could be in range of block area
-					for (int k = 0; k < 4; k++) {           // then check every block
+			for (auto it = blockvec.begin(); it != blockvec.end(); it++) {
+				for (int k = 0; k < 4; k++) {
+					int blockRow = it->topleft_Y + k;
+					if (blockRow == i) { // Block row matches cleared row
 						for (int l = 0; l < 4; l++) {
-							if (it->blockarr[i - it->topleft_Y][l] == '#') {
-								it->blockarr[i - it->topleft_Y][l] = '-';
+							if (it->blockarr[k][l] == BLOCKCHAR) {
+								it->blockarr[k][l] = BACKCHAR;
 							}
 						}
 					}
@@ -368,10 +377,9 @@ int TetrisGame::clearRows()
 }
 void TetrisGame::moveAllDown()
 {
-
 	for (auto iter = blockvec.begin(); iter != blockvec.end(); iter++)
 	{
-		moveBlock(iter, 2);
+		moveBlock(iter, 2, 0);
 
 	}
 }
@@ -404,12 +412,74 @@ void TetrisGame::updatescoreYtotalrowcleared(int rowscleared)
 }
 int TetrisGame::waitTime()
 {
-	int temp = 275 - totalrowscleared;
+	int temp = 200 - totalrowscleared;
 	if (temp > 100)
 	{
 		return temp;
 	}
 	else {
 		return 100;
+	}
+}
+void TetrisGame::startscreen()
+{
+std::cout <<    "|----------------------------------------------------------------------------------|\n"
+				"|         TTTTTTTTT   EEEEEEE   TTTTTTTTT   RRRRRR     IIIIIII    SSSSSSS          |\n"
+				"|             T       E             T       R      R      I      S                 |\n"
+				"|             T       EEEEE         T       RRRRRR        I       SSSSSS           |\n"
+				"|             T       E             T       R    R        I             S          |\n"
+				"|             T       EEEEEEE       T       R      R   IIIIIII   SSSSSSS           |\n"
+				"|----------------------------------------------------------------------------------|\n"
+				"| Instructions:                                                                    |\n"
+				"|----------------------------------------------------------------------------------|\n"
+				"|1: Move the falling blocks into position with A/S/D keys for left/down/right.     |\n"
+	            "|2: Rotate the blocks counter-clockwise/clockwise with J/K keys                    |\n"
+	            "|3: When a row is filled it will be cleared and the score will increase            |\n"
+	            "|4: Plan your next move using the information from 'next block' section            |\n"
+				"|----------------------------------------------------------------------------------|\n"
+	            "|                         Press 'Enter' to start the game:                         |\n"
+                "|----------------------------------------------------------------------------------|";
+	std::cin.get();
+}
+void TetrisGame::gameoverscreen()
+{
+std::cout <<"|----------------------------------------------------------------------------------|\n"
+			"|  GGGGGG       A       M     M   EEEEEE       OOOOO   V       V  EEEEEE   RRRRRR  |\n"
+			"| G            A A      MM   MM   E           O     O   V     V   E        R     R |\n"
+			"| G   GGG     AAAAA     M M M M   EEEEE       O     O    V   V    EEEEE    RRRRRR  |\n"
+			"| G     G    A     A    M  M  M   E           O     O     V V     E        R    R  |\n"
+			"|  GGGGG    A       A   M     M   EEEEEE       OOOOO       V      EEEEEE   R     R |\n"
+			"|----------------------------------------------------------------------------------|\n"
+			"| final score:                                                                     |\n"
+			"|----------------------------------------------------------------------------------|\n"
+			"| Score:" << score << "\n"
+			"|----------------------------------------------------------------------------------|\n";
+}
+int TetrisGame::randomnum()
+{
+	return rand() % 7;
+}
+int TetrisGame::getnextBlockType()
+{
+	return nextBlockType;
+}
+void TetrisGame::setnextBlockType(int num)
+{
+	nextBlockType = num;
+}
+void TetrisGame::outputblock(int type)
+{
+	block temp(type);
+	for (int i = 1; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+
+			std::cout << temp.blockarr[i][j];
+		}
+		if (i == 1)
+		{
+			std::cout << "\n";
+		}
 	}
 }

@@ -1,10 +1,15 @@
-#ifndef TETRISGAME_H
+﻿#ifndef TETRISGAME_H
 #define TETRISGAME_H
 
+#include <ctime>
 #include <vector>
 #include <iostream>
 #include <windows.h>
 #include <conio.h>
+
+
+const char BLOCKCHAR = '#';
+const char BACKCHAR = ' ';
 
 
 class block{
@@ -26,19 +31,27 @@ public:
 	std::vector<block> blockvec;
 	TetrisGame();
 	int waitTime();
+	int clearRows();
+	bool moveBlock(std::vector<block>::iterator it, int dir, bool mainMove);
+	bool rotBlock(std::vector<block>::iterator it, int rot);
+	bool validRot(std::vector<block>::iterator it, int rot);
+	bool validMove(std::vector<block>::iterator it, int dir);
 	void updatescoreYtotalrowcleared( int rowscleared);
 	void doImput(std::vector<block>::iterator iter);
-	int clearRows();
 	void moveAllDown();
 	void displayGameArray();
-	bool moveBlock(std::vector<block>::iterator it, int dir);
-	bool rotBlock(std::vector<block>::iterator it, int rot);
 	void clearBlock(std::vector<block>::iterator it);
 	void addBlocktoarr(std::vector<block>::iterator it);
 	void addBlock(int type);
-	bool validRot(std::vector<block>::iterator it, int rot);
-	bool validMove(std::vector<block>::iterator it, int dir);
+	void startscreen();
+	void gameoverscreen();
+	int randomnum();
+	int getnextBlockType();
+	void setnextBlockType( int num);
+	void outputblock(int type);
+
 private:
+	char nextBlockType;
 	char gamearr[25][10];
 	int score;
 	int totalrowscleared;
