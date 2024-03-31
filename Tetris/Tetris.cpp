@@ -23,6 +23,7 @@ int main()
                 chosen.doImput(iter);
                 Sleep(30);
                 chosen.doImput(iter);
+                system("cls");
                 chosen.displayGameArray();
                 Sleep(chosen.waitTime());
                 }
