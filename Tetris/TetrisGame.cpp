@@ -197,7 +197,7 @@ bool TetrisGame::moveBlock(std::vector<block>::iterator it, int dir, bool mainMo
 	}
 	
 }
-bool TetrisGame::validRot(std::vector<block>::iterator it, int rot)
+bool TetrisGame::validRot(std::vector<block>::iterator it, int rot) const
 {
 	block temp = block(*it);
 	switch (rot)
@@ -229,7 +229,7 @@ bool TetrisGame::validRot(std::vector<block>::iterator it, int rot)
 	}
 	return 1;
 }
-bool TetrisGame::validMove(std::vector<block>::iterator it, int dir)
+bool TetrisGame::validMove(std::vector<block>::iterator it, int dir) const
 {
 	block temp = block(*it);
 	int newY, newX;
@@ -379,8 +379,10 @@ void TetrisGame::moveAllDown()
 {
 	for (auto iter = blockvec.begin(); iter != blockvec.end(); iter++)
 	{
-		moveBlock(iter, 2, 0);
-
+		if (!iter->active)
+		{
+			moveBlock(iter, 2, 0);
+		}
 	}
 }
 void TetrisGame::updatescoreYtotalrowcleared(int rowscleared)
@@ -410,7 +412,7 @@ void TetrisGame::updatescoreYtotalrowcleared(int rowscleared)
 	score += add;
 	totalrowscleared += rowscleared;
 }
-int TetrisGame::waitTime()
+int TetrisGame::waitTime() const
 {
 	int temp = 200 - totalrowscleared;
 	if (temp > 100)
@@ -441,20 +443,23 @@ std::cout <<    "|--------------------------------------------------------------
                 "|----------------------------------------------------------------------------------|";
 	std::cin.get();
 }
-void TetrisGame::gameoverscreen()
+void TetrisGame::gameoverscreen() const
 {
-std::cout <<"\n|----------------------------------------------------------------------------------|\n"
-			"|  GGGGGG       A       M     M   EEEEEE       OOOOO   V       V  EEEEEE   RRRRRR  |\n"
-			"| G            A A      MM   MM   E           O     O   V     V   E        R     R |\n"
-			"| G   GGG     AAAAA     M M M M   EEEEE       O     O    V   V    EEEEE    RRRRRR  |\n"
-			"| G     G    A     A    M  M  M   E           O     O     V V     E        R    R  |\n"
-			"|  GGGGG    A       A   M     M   EEEEEE       OOOOO       V      EEEEEE   R     R |\n"
-			"|----------------------------------------------------------------------------------|\n"
-			"| final score:                                                                     |\n"
-			"|----------------------------------------------------------------------------------|\n"
-			"| Score:" << score << "\n"
-	        "| Rows Cleared:" << totalrowscleared << "\n"
-			"|----------------------------------------------------------------------------------|\n";
+std::cout <<  "\n|----------------------------------------------------------------------------------|\n"
+				"|  GGGGGG       A       M     M   EEEEEE       OOOOO   V       V  EEEEEE   RRRRRR  |\n"
+				"| G            A A      MM   MM   E           O     O   V     V   E        R     R |\n"
+				"| G   GGG     AAAAA     M M M M   EEEEE       O     O    V   V    EEEEE    RRRRRR  |\n"
+				"| G     G    A     A    M  M  M   E           O     O     V V     E        R    R  |\n"
+				"|  GGGGG    A       A   M     M   EEEEEE       OOOOO       V      EEEEEE   R     R |\n"
+				"|----------------------------------------------------------------------------------|\n"
+				"| final score:                                                                     |\n"
+				"|----------------------------------------------------------------------------------|\n"
+				"| Score:" << score << "\n"
+				"| Rows Cleared:" << totalrowscleared << "\n"
+				"|----------------------------------------------------------------------------------|\n"
+				"|                               Press 'Enter' exit:                                |\n"
+				"|----------------------------------------------------------------------------------|";
+std::cin.get();
 }
 int TetrisGame::randomnum()
 {
@@ -496,7 +501,7 @@ int TetrisGame::randomnum()
 		}
 	}
 }
-int TetrisGame::getnextBlockType()
+int TetrisGame::getnextBlockType() const
 {
 	return nextBlockType;
 }
@@ -504,7 +509,7 @@ void TetrisGame::setnextBlockType(int num)
 {
 	nextBlockType = num;
 }
-void TetrisGame::outputblock(int type)
+void TetrisGame::outputblock(int type) const
 {
 	block temp(type);
 	for (int i = 1; i < 3; i++)

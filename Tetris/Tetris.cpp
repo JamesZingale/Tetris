@@ -17,6 +17,7 @@ int main()
             {
                 while (chosen.moveBlock(iter, 2, 1))
                 {
+                chosen.moveAllDown();
                 chosen.doImput(iter);
                 Sleep(30);
                 chosen.doImput(iter);
@@ -27,16 +28,9 @@ int main()
                 }
             }
         }
-        int val = chosen.clearRows();
-        chosen.updatescoreYtotalrowcleared(val);
-        if (val != 0)
-        {
-            for (int i = 0; i < 25; i++)
-            {
-                chosen.moveAllDown();
-            }
-        
-        }
+        int val1 =chosen.clearRows();
+        chosen.updatescoreYtotalrowcleared(val1);
+       
         chosen.addBlock(chosen.getnextBlockType());
     }
     chosen.gameoverscreen();

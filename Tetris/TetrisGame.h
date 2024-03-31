@@ -28,12 +28,12 @@ public:
 class TetrisGame{
 public:
 	TetrisGame();
-	int waitTime();
+	int waitTime() const;
 	int clearRows();
 	bool moveBlock(std::vector<block>::iterator it, int dir, bool mainMove);
 	bool rotBlock(std::vector<block>::iterator it, int rot);
-	bool validRot(std::vector<block>::iterator it, int rot);
-	bool validMove(std::vector<block>::iterator it, int dir);
+	bool validRot(std::vector<block>::iterator it, int rot) const;
+	bool validMove(std::vector<block>::iterator it, int dir) const;
 	void updatescoreYtotalrowcleared( int rowscleared);
 	void doImput(std::vector<block>::iterator iter);
 	void moveAllDown();
@@ -42,11 +42,11 @@ public:
 	void addBlocktoarr(std::vector<block>::iterator it);
 	void addBlock(int type);
 	void startscreen();
-	void gameoverscreen();
+	void gameoverscreen() const;
 	int randomnum();
-	int getnextBlockType();
+	int getnextBlockType() const;
 	void setnextBlockType( int num);
-	void outputblock(int type);
+	void outputblock(int type) const;
 	bool  gameover = 0;
 	std::vector<block> blockvec;
 
