@@ -1,6 +1,5 @@
 #include "TetrisGame.h"
 
-
 int main()
 {
     srand(time(0));
@@ -29,7 +28,14 @@ int main()
                 }
             }
         }
-        int val1 =chosen.clearRows();
+        int val1 = chosen.clearRows();
+        if (val1 != 0)
+        {
+            for (auto iter = chosen.blockvec.begin(); iter != chosen.blockvec.end(); iter++)
+            {
+                chosen.splitblock(iter);
+            }
+        }
         chosen.updatescoreYtotalrowcleared(val1);
        
         chosen.addBlock(chosen.getnextBlockType());

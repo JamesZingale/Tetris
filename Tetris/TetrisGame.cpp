@@ -93,6 +93,94 @@ void block::rotateCW()
 	reverseRows();
 }
 
+void TetrisGame::clearrow(block& blk, int r)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		blk.blockarr[r][i] = BACKCHAR;
+	}
+}
+
+void TetrisGame::splitblock(std::vector<block>::iterator it)
+{
+	int blockcount = 0;
+	bool rowzeroOCC = 0, rowoneOCC = 0, rowtwoOCC = 0, rowthreeOCC = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (it->blockarr[i][j] == BLOCKCHAR)
+			{
+				blockcount++;
+				if(i == 0){ rowzeroOCC = 1; }
+				if(i == 1){ rowoneOCC = 1; }
+				if(i == 2){ rowtwoOCC = 1; }
+				if(i == 3){ rowthreeOCC = 1; }
+			}
+		}
+	}
+	if (blockcount < 4)
+	{
+		if (rowzeroOCC && !rowoneOCC && !rowtwoOCC && rowthreeOCC)
+		{
+			clearBlock(it);
+			block newblock(*it);
+			clearrow(newblock, 3);
+			clearrow(*it, 0);
+
+			blockvec.emplace_back(newblock);
+			addBlocktoarr(blockvec.end() - 1);
+			addBlocktoarr(it);
+		}
+		if(rowzeroOCC && rowoneOCC && !rowtwoOCC && rowthreeOCC)
+		{
+			clearBlock(it);
+			block newblock(*it);
+			clearrow(newblock, 3);
+			clearrow(*it, 0);
+			clearrow(*it, 1);
+
+			blockvec.emplace_back(newblock);
+			addBlocktoarr(blockvec.end() - 1);
+			addBlocktoarr(it);
+		}
+		if (rowzeroOCC && !rowoneOCC && rowtwoOCC && rowthreeOCC)
+		{
+			clearBlock(it);
+			block newblock(*it);
+			clearrow(newblock, 3);
+			clearrow(newblock, 2);
+			clearrow(*it, 0);
+
+			blockvec.emplace_back(newblock);
+			addBlocktoarr(blockvec.end() - 1);
+			addBlocktoarr(it);
+		}
+		if (rowzeroOCC && !rowoneOCC && rowtwoOCC && !rowthreeOCC)
+		{
+			clearBlock(it);
+			block newblock(*it);
+			clearrow(newblock, 2);
+			clearrow(*it, 0);
+
+			blockvec.emplace_back(newblock);
+			addBlocktoarr(blockvec.end() - 1);
+			addBlocktoarr(it);
+		}
+		if (!rowzeroOCC && rowoneOCC && !rowtwoOCC && rowthreeOCC)
+		{
+			clearBlock(it);
+			block newblock(*it);
+			clearrow(newblock, 3);
+			clearrow(*it, 1);
+
+			blockvec.emplace_back(newblock);
+			addBlocktoarr(blockvec.end() - 1);
+			addBlocktoarr(it);
+		}
+	}
+}
+
 TetrisGame::TetrisGame()
 {
 	nextBlockType = -1;
@@ -176,10 +264,6 @@ bool TetrisGame::moveBlock(std::vector<block>::iterator it, int dir, bool mainMo
 		newY = it->topleft_Y;
 		newX = it->topleft_X - 1;
 		break;
-	default:
-		newY = it->topleft_Y;
-		newX = it->topleft_X;
-		break;
 	}
 	if (validMove(it, dir))
 	{
@@ -195,7 +279,6 @@ bool TetrisGame::moveBlock(std::vector<block>::iterator it, int dir, bool mainMo
 		addBlocktoarr(it);
 		return 0;
 	}
-	
 }
 bool TetrisGame::validRot(std::vector<block>::iterator it, int rot) const
 {
@@ -500,6 +583,7 @@ int TetrisGame::randomnum()
 			}
 		}
 	}
+	return 0;
 }
 int TetrisGame::getnextBlockType() const
 {
@@ -516,7 +600,6 @@ void TetrisGame::outputblock(int type) const
 	{
 		for (int j = 0; j < 4; j++)
 		{
-
 			std::cout << temp.blockarr[i][j];
 		}
 		if (i == 1)
