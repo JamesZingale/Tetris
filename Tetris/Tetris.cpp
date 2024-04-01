@@ -33,7 +33,7 @@ int main()
         {
             for (auto iter = chosen.blockvec.begin(); iter != chosen.blockvec.end(); iter++)
             {
-                chosen.splitblock(iter);
+                chosen.clearstuckblock(iter);
             }
         }
         chosen.updatescoreYtotalrowcleared(val1);

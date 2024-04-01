@@ -47,7 +47,7 @@ public:
 	int getnextBlockType() const;
 	void setnextBlockType( int num);
 	void outputblock(int type) const;
-	void splitblock(std::vector<block>::iterator it);
+	void clearstuckblock(std::vector<block>::iterator it);
 	void clearrow(block& blk, int r);
 	bool  gameover = 0;
 	std::vector<block> blockvec;

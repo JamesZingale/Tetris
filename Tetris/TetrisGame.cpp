@@ -101,7 +101,7 @@ void TetrisGame::clearrow(block& blk, int r)
 	}
 }
 
-void TetrisGame::splitblock(std::vector<block>::iterator it)
+void TetrisGame::clearstuckblock(std::vector<block>::iterator it)
 {
 	int blockcount = 0;
 	bool rowzeroOCC = 0, rowoneOCC = 0, rowtwoOCC = 0, rowthreeOCC = 0;
@@ -124,58 +124,31 @@ void TetrisGame::splitblock(std::vector<block>::iterator it)
 		if (rowzeroOCC && !rowoneOCC && !rowtwoOCC && rowthreeOCC)
 		{
 			clearBlock(it);
-			block newblock(*it);
-			clearrow(newblock, 3);
 			clearrow(*it, 0);
-
-			blockvec.emplace_back(newblock);
-			addBlocktoarr(blockvec.end() - 1);
 			addBlocktoarr(it);
 		}
 		if(rowzeroOCC && rowoneOCC && !rowtwoOCC && rowthreeOCC)
 		{
 			clearBlock(it);
-			block newblock(*it);
-			clearrow(newblock, 3);
-			clearrow(*it, 0);
-			clearrow(*it, 1);
-
-			blockvec.emplace_back(newblock);
-			addBlocktoarr(blockvec.end() - 1);
+			clearrow(*it, 3);
 			addBlocktoarr(it);
 		}
 		if (rowzeroOCC && !rowoneOCC && rowtwoOCC && rowthreeOCC)
 		{
 			clearBlock(it);
-			block newblock(*it);
-			clearrow(newblock, 3);
-			clearrow(newblock, 2);
 			clearrow(*it, 0);
-
-			blockvec.emplace_back(newblock);
-			addBlocktoarr(blockvec.end() - 1);
 			addBlocktoarr(it);
 		}
 		if (rowzeroOCC && !rowoneOCC && rowtwoOCC && !rowthreeOCC)
 		{
 			clearBlock(it);
-			block newblock(*it);
-			clearrow(newblock, 2);
 			clearrow(*it, 0);
-
-			blockvec.emplace_back(newblock);
-			addBlocktoarr(blockvec.end() - 1);
 			addBlocktoarr(it);
 		}
 		if (!rowzeroOCC && rowoneOCC && !rowtwoOCC && rowthreeOCC)
 		{
 			clearBlock(it);
-			block newblock(*it);
-			clearrow(newblock, 3);
 			clearrow(*it, 1);
-
-			blockvec.emplace_back(newblock);
-			addBlocktoarr(blockvec.end() - 1);
 			addBlocktoarr(it);
 		}
 	}
